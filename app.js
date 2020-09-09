@@ -64,9 +64,9 @@ const engineerQuestion = [
         message: "Github UserName:"
     }
 ];
+const allEmployeeData = [];
 
 async function askQuestions() {
-    const allEmployeeData = [];
 
     const employeeAnswers = await inquirer.prompt(employeeQuestions);
 
@@ -98,40 +98,49 @@ async function askQuestions() {
     if (moreEmployees.another) {
         askQuestions();
     }
+    await allEmployeeData.forEach(element => {
+        formattedEmpObject = []
+        const name = element.name;
+        const id = element.id;
+        const email = element.email;
+        const employeeType = element.employeeType;
+        switch (employeeType) {
+            case "Manager": {
+                const officeNumber = element.newAnswer.officeNumber;
+                const manager = new Manager(name, id, email, officeNumber);
+                formattedEmpObject.push(manager);
+                break;
+            }
+            case "Intern": {
+                const school = element.newAnswer.school;
+                const intern = new Intern(name, id, email, school);
+                formattedEmpObject.push(intern);
+                break;
+            }
+            case "Engineer": {
+                const github = element.newAnswer.github;
+                const engineer = new Engineer(name, id, email, github);
+                formattedEmpObject.push(engineer);
+                break;
+            }
+        }
+        return (formattedEmpObject);
+    });
+
+
+        const output = await render(formattedEmpObject);
+    
+        fs.writeFile(outputPath, output, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            else {
+                console.log("Successfully wrote the team.html file!");
+            }
+        });
+    
 }
 askQuestions()
-// function createFile() {
 
-//     const output = render(allEmployeeData);
 
-//     fs.writeFile(outputPath, output, function (err) {
-//         if (err) {
-//             return console.log(err);
-//         }
-//         // else {
-//         //     console.log("Successfully wrote the team.html file!");
-//         // }
-//     });
-// }
 
-// createFile();
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```

@@ -13,7 +13,7 @@ const render = require("./lib/htmlRenderer");
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-inquirer.prompt([
+const employeeQuestions = [
     {
         type: "input",
         name: "name",
@@ -39,39 +39,82 @@ inquirer.prompt([
             "Engineer"
         ]
     }
-]).then(function (data) {
-    const employeeType = data.employeeType;
-    if (employeeType === "Manager") {
-        inquirer.prompt([
-            {
-                type: "input",
-                name: "officeNumber",
-                message: "Office Number:"
-            }
-        ]
-        )
+];
+
+const managerQuestion = [
+    {
+        type: "input",
+        name: "officeNumber",
+        message: "Office Number:"
     }
-    if (employeeType === "Intern") {
-        inquirer.prompt([
-            {
-                type: "input",
-                name: "school",
-                message: "Name of School:"
-            }
-        ]
-        )
+];
+
+const internQuestion = [
+    {
+        type: "input",
+        name: "school",
+        message: "Name of School:"
     }
-    if (employeeType === "Engineer") {
-        inquirer.prompt([
-            {
-                type: "input",
-                name: "githubUser",
-                message: "Github UserName:"
-            }
-        ]
-        )
+];
+
+const engineerQuestion = [
+    {
+        type: "input",
+        name: "githubUser",
+        message: "Github UserName:"
     }
-})
+];
+
+async function askQuestions() {
+    const allEmployeeData = [];
+
+    const employeeAnswers = await inquirer.prompt(employeeQuestions);
+
+    switch (employeeAnswers.employeeType) {
+        case "Manager": {
+            const managerAnswers = await inquirer.prompt(managerQuestion);
+            employeeAnswers.newAnswer = managerAnswers;
+            break;
+        }
+        case "Intern": {
+            const internAnswers = await inquirer.prompt(internQuestion);
+            employeeAnswers.newAnswer = internAnswers;
+            break;
+        }
+        case "Engineer": {
+            const engineerAnswers = await inquirer.prompt(engineerQuestion);
+            employeeAnswers.newAnswer = engineerAnswers;
+            break;
+        }
+    }
+
+    allEmployeeData.push(employeeAnswers)
+
+    const moreEmployees = await inquirer.prompt([{
+        type: "confirm",
+        name: "another",
+        message: "Add another employee?"
+    }])
+    if (moreEmployees.another) {
+        askQuestions();
+    }
+}
+askQuestions()
+// function createFile() {
+
+//     const output = render(allEmployeeData);
+
+//     fs.writeFile(outputPath, output, function (err) {
+//         if (err) {
+//             return console.log(err);
+//         }
+//         // else {
+//         //     console.log("Successfully wrote the team.html file!");
+//         // }
+//     });
+// }
+
+// createFile();
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
@@ -79,6 +122,7 @@ inquirer.prompt([
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
+
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
 

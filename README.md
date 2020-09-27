@@ -1,7 +1,7 @@
 # Template Engine
 
 ## Description 
- Generates a README.md file using the command line 
+  Use this app as a template to putting together different combinations of objects that belong to a subclass of a class.
  ### Images
  ![CLI after filled out](./images/one.png)
  ![team.html afterwards](./images/two.png)
@@ -13,7 +13,7 @@
  - [contributing](#contributing) 
  - [Tests](#tests) 
 ## Installation 
- Use this app as a template to putting together different combinations of objects that belong to a subclass of a class.
+ Git pull, or download.
 ## Usage 
  Once project is installed, run node.js in the command line and follow the prompts. The app will overwrite team.html in the output folder.
 ## License 
